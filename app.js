@@ -30,6 +30,7 @@ const quizData = [
 
 // index for the question
 let currentQuestion = 0;
+let score = 0;
 
 
 // html elements with id of 'a,b,c,d-text
@@ -39,13 +40,18 @@ const a_text = document.getElementById('a_text');
 const b_text = document.getElementById('b_text');
 const c_text = document.getElementById('c_text');
 const d_text = document.getElementById('d_text');
+const quiz = document.getElementById('quiz');
 
 // function where questions are going to be loaded
 loadQuiz();
 
-// function for loading the question together with the answers
+/**
+ * Represents quiz's questions with answers
+ * @param {object} currentQuiz - Question data
+ */
 function loadQuiz() {
     const currentQuiz = quizData[currentQuestion];
+    // setting the text value inside the html
     questionEl.innerText = currentQuiz.question;
     a_text.innerText = currentQuiz.a;
     b_text.innerText = currentQuiz.b;
@@ -53,14 +59,41 @@ function loadQuiz() {
     d_text.innerText = currentQuiz.d;
 }
 
+/**
+ * Represents selected question
+ */
+function getSelectedAnswer() {
+    const answersEls = document.querySelectorAll('.answer');
+    let answer = undefined;
+
+    // looping over answers
+    answersEls.forEach(answerEl => {
+
+        if (answerEl.checked) {
+            answer = answerEl.id;
+        }
+
+    });
+
+    return answer;
+}
+
 submitEl.addEventListener('click', () => {
-   currentQuestion++;
-
-    if(currentQuestion < quizData.length) {
-        loadQuiz(); 
-    } else {
-        currentQuestion = 0;
-        alert('You have finished the questionarie');
+    // checked to see the answer
+    const answer = getSelectedAnswer();
+    /**
+     * Represents adding and substracting
+     * @param {answer} - 
+     */
+    if (answer) {
+        if (answer === quizData[currentQuestion].correct) {
+            score++
+        }
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuiz();
+            } else {
+                quiz.innerHTML = `<h3 class="header-center">Your score is three out of ${score}</h3>`
+            }
     }
-
 });
